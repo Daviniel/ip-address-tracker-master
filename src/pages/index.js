@@ -1,5 +1,14 @@
 export default function Home() {
   return (
-    <h1>Hello World!</h1>
+    <Container>
+      <SearchSection>
+        <h2>IP Address Tracker</h2>
+
+        <div>
+          <input type="text" placeholder="Search for any IP address or domain"></input>
+          <button><Arrow /></button>
+        </div>
+      </SearchSection>
+    </Container>
   )
 }
