@@ -14,7 +14,7 @@ export default function Home() {
       try {
         setLoading(true);
 
-        const response = await fetch('https://geo.ipify.org/api/v1?apiKey=${apiKey}')
+        const response = await fetch (`https://geo.ipify.org/api/v1?apiKey=${apiKey}`);
         const data = await response.json();
 
         if(response.status !== 200) throw new Error();
@@ -40,31 +40,32 @@ export default function Home() {
           <input type="text" placeholder="Search for any IP address or domain"></input>
           <button><Arrow /></button>
         </div>
+
         {results?.location && (
           <SearchInfos>
             <ul>
               <li>
                 <div>
                   <strong>IP Address</strong>
-                  <p>192.199.0.100</p>
+                  <p>{results.ip}</p>
                 </div>
               </li>
               <li>
                 <div>
                   <strong>Location</strong>
-                  <p>Brooklyn, NY<br /> 10001</p>
+                  <p>{`${results.location.city}, ${results.location.country}`}<br />{results.location.region}</p>
                 </div>
               </li>
               <li>
                 <div>
                   <strong>Timezone</strong>
-                  <p>UTC -05:00</p>
+                  <p>UTC {results.location.timezone}</p>
                 </div>
               </li>
               <li>
                 <div>
                   <strong>ISP</strong>
-                  <p>SpaceX Starlink</p>
+                  <p>{results.isp}</p>
                 </div>
               </li>
             </ul>
