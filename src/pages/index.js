@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react';
+import { Container, SearchSection, MapContainer, SearchInfos } from "../styles/HomeStyles";
 import Arrow from '../assets/icon-arrow.svg';
-import { Container, SearchSection, SearchInfos, MapContainer } from '../styles/HomeStyles';
+import { useEffect, useState } from "react";
 
 export default function Home() {
-  const teste = true;
+  const [ipAddress, setIpAddress] = useState('');
   const [loading, setLoading] = useState(false);
   const [results, setResults] = useState({});
 
@@ -14,13 +14,13 @@ export default function Home() {
       try {
         setLoading(true);
 
-        const response = await fetch (`https://geo.ipify.org/api/v1?apiKey=${apiKey}`);
+        const response = await fetch(`https://geo.ipify.org/api/v1?apiKey=${apiKey}`);
         const data = await response.json();
-
+        
         if(response.status !== 200) throw new Error();
 
         setResult(data);
-
+  
       } catch (err) {
         console.log(err)
       } finally {
@@ -30,6 +30,38 @@ export default function Home() {
     getInitialData();
   }, [])
 
+  async function handleSubmit() {
+    if(!ipAddress) return;
+
+    try {
+      setLoading(true);
+
+      if (/^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(ipAddress)) {  
+        
+        const response = await fetch(`https://geo.ipify.org/api/v1?apiKey=${apiKey}&ipAddress=${ipAddress}`);
+        const data = await response.json();
+        
+        if(response.status !== 200) throw new Error();
+
+        setResult(data);
+
+      } else {
+
+        const response = await fetch(`https://geo.ipify.org/api/v1?apiKey=${apiKey}&domain=${ipAddress}`);
+        const data = await response.json();
+
+        if(response.status !== 200) throw new Error();
+
+        setResult(data);
+
+      }
+
+    } catch (err) {
+      toast.error("An error occurred while searching for this IP or domain! Please try again.")
+    } finally {
+      setLoading(false);
+    }
+  }
 
   return (
     <Container>
@@ -37,7 +69,12 @@ export default function Home() {
         <h2>IP Address Tracker</h2>
 
         <div>
-          <input type="text" placeholder="Search for any IP address or domain"></input>
+          <input 
+            type="text"
+            placeholder="Search for any IP address or domain" 
+            value={ipAddress} 
+            onChange={({target}) => setIpAddress(target.value)}>
+          </input>
           <button><Arrow /></button>
         </div>
 
