@@ -111,7 +111,9 @@ export default function Home() {
         )}
       </SearchSection>
 
-      <MapContainer />
+      <MapContainer loading={loading} >
+        <Map defaultPosition={defaultPosition} location={results.location ? [results.location.lat, results.location.lng] : defaultPosition}/>
+      </MapContainer>
     </Container>
   )
 }
