@@ -1,12 +1,17 @@
 import { Container, SearchSection, MapContainer, SearchInfos } from "../styles/HomeStyles";
 import Arrow from '../assets/icon-arrow.svg';
+import dynamic from 'next/dynamic';
 import { useEffect, useState } from "react";
 import Loader from "../components/Loader";
+import { toast } from "react-toastify";
+import Head from "next/head";
+
+const Map = dynamic(() => import("../components/Map"), { ssr: false });
 
 export default function Home() {
   const [ipAddress, setIpAddress] = useState('');
   const [loading, setLoading] = useState(false);
-  const [results, setResults] = useState({});
+  const [results, setResult] = useState({});
 
   const apiKey = process.env.NEXT_PUBLIC_API_KEY;
 
@@ -23,7 +28,7 @@ export default function Home() {
         setResult(data);
   
       } catch (err) {
-        console.log(err)
+        toast.error("An error occurred while searching your IP!")
       } finally {
         setLoading(false);
       }
@@ -63,19 +68,31 @@ export default function Home() {
       setLoading(false);
     }
   }
+  
+  const defaultPosition = [-23.550520, -46.633308]
+
+  useEffect(() => {
+    toast.warn("Please disable ADBlock for the application to work normally 😊🚀", {
+      autoClose: '10000',
+    })
+  }, [])
 
   return (
     <Container>
+      <Head>
+        <title>IP Address Tracker - Find any IP address or domain easily</title>
+      </Head>
+
       <SearchSection results={results.location}>
         <h2>IP Address Tracker</h2>
 
         <div>
-          <input 
+          <input
             type="text"
-            placeholder="Search for any IP address or domain" 
-            value={ipAddress} 
-            onChange={({target}) => setIpAddress(target.value)}>
-          </input>
+            placeholder="Search for any IP address or domain"
+            value={ipAddress}
+            onChange={({target}) => setIpAddress(target.value)}
+          />
           <button disabled={!!loading} onClick={handleSubmit}>{loading ? <Loader /> : <Arrow />}</button>
         </div>
 
@@ -109,6 +126,7 @@ export default function Home() {
             </ul>
           </SearchInfos>
         )}
+
       </SearchSection>
 
       <MapContainer loading={loading} >

@@ -1,9 +1,13 @@
-import GlobalStyle from "../styles/GlobalStyles";
+import { ToastContainer } from 'react-toastify';
+import GlobalStyle from '../styles/GlobalStyles';
 
-function MyApp({ Component, pageProps}) {
+import 'react-toastify/dist/ReactToastify.css';
+
+function MyApp({ Component, pageProps }) {
   return (
     <>
       <GlobalStyle />
+      <ToastContainer />
       <Component {...pageProps} />
     </>
   )
