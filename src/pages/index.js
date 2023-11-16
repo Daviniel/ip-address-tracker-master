@@ -1,6 +1,7 @@
 import { Container, SearchSection, MapContainer, SearchInfos } from "../styles/HomeStyles";
 import Arrow from '../assets/icon-arrow.svg';
 import { useEffect, useState } from "react";
+import Loader from "../components/Loader";
 
 export default function Home() {
   const [ipAddress, setIpAddress] = useState('');
@@ -75,7 +76,7 @@ export default function Home() {
             value={ipAddress} 
             onChange={({target}) => setIpAddress(target.value)}>
           </input>
-          <button><Arrow /></button>
+          <button disabled={!!loading} onClick={handleSubmit}>{loading ? <Loader /> : <Arrow />}</button>
         </div>
 
         {results?.location && (
